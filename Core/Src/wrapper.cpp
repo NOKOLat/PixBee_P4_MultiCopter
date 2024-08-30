@@ -47,7 +47,6 @@ void init(){
 	__HAL_TIM_SET_COMPARE(ledTim, RED_LED_CHANNEL, 0);
 	__HAL_TIM_SET_COMPARE(ledTim, BLUE_LED_CHANNEL, 0);
 
-
 	//start to receive sbus.
 	HAL_UART_Receive_DMA(huartSbus,hsbus.getReceiveBufferPtr(),hsbus.getDataLen());
 	HAL_TIM_PWM_Start_IT(&htim14, TIM_CHANNEL_1);
