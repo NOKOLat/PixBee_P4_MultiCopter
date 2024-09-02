@@ -89,7 +89,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  SET_MASK_ICM20948_INTERRUPT();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
