@@ -136,14 +136,16 @@ void icm20948Callback(){
 	auto z_machienFrame = attitude.rotateVector({0,0,1.0});
 	float roll = std::asin(z_machienFrame[0]);
 	float pitch = std::asin(z_machienFrame[1]);
-	float yawRate = gyro[2];
+	float yawRate = 0.8*gyro[2]+0.2*multicopterInput.yawRate;
 
 	multicopterInput.roll = roll;
 	multicopterInput.pitch = pitch;
 	multicopterInput.yawRate = yawRate;
 	auto res = hmulticopter->controller(multicopterInput);
 	esc.setSpeed(res);
-	message(multicopter::to_string(res), 3);
+
+	message(hmulticopter->getCotrolValue()+", "+multicopter::to_string(res),3);
+//	message(multicopter::to_string(res), 3);
 //	message(hmulticopter->getCotrolValue(), 3);
 //	message(std::to_string(int16_t(roll*180/std::numbers::pi))+", "+std::to_string(int16_t(pitch*180/std::numbers::pi)),3);
 
@@ -225,6 +227,7 @@ void tim14Callback(){
 		hmulticopter->setRcFrameLost();
 	}else if((sr & TIM_IT_UPDATE) == (TIM_IT_UPDATE)){
 		__HAL_TIM_SET_COMPARE(ledTim, RED_LED_CHANNEL, 300);
+		HAL_UART_AbortReceive(huartSbus);
 		HAL_UART_Receive_DMA(huartSbus,hsbus.getReceiveBufferPtr(),hsbus.getDataLen());
 		__HAL_TIM_CLEAR_FLAG(htim,TIM_IT_UPDATE);
 		hmulticopter->rcFailSafe();
