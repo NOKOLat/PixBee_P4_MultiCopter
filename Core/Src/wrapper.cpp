@@ -32,8 +32,6 @@ std::array<float, 3> gyroValue;
 std::array<float, 3> AccelValue;
 
 void init(){
-	bool isInitializing = true;
-
 	SET_MASK_ICM20948_INTERRUPT();
 
 	HAL_TIM_PWM_Start(RED_LED);
@@ -78,12 +76,11 @@ void init(){
 
 	while(isInitializing){
 		isInitializing = !attitudeEstimate.isInitialized();
-		bool tmp = icm20948User.isCalibrated();
-		if(tmp == true){
+		if(icm20948User.isCalibrated()){
 			message("icm20948 calibration is finished",3);
 			_icm20948Callback = icm20948Callback;
+			isInitializing |= false;
 		}
-		isInitializing = !tmp;
 //		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1));
 //		esc.setSpeed(0);
 		HAL_Delay(50);
@@ -130,6 +127,10 @@ void icm20948Callback(){
 	attitudeEstimate.setAccelValue(accel);
 	attitudeEstimate.setGyroValue(gyro);
 	attitudeEstimate.update();
+
+	if(isInitializing){
+		return;
+	}
 
 	auto attitude = attitudeEstimate.getAttitude();
 	auto z_machienFrame = attitude.rotateVector({0,0,1.0});
