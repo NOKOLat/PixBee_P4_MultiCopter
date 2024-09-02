@@ -37,7 +37,7 @@ UART_HandleTypeDef *huartSbus = &huart5;
 UART_HandleTypeDef *huartXbee = &huart4;
 SBUS_HANDLE hsbus(lower,center, upper);
 
-static std::function<void(void)> _icm20948Callback;
+static std::function<void(void)> _icm20948Callback = [](){};
 
 ICM20948_HAL *icm20948 = new ICM20948_HAL(&hi2c2, ICM20948::Address::LOW);
 //ICM20948_HAL *icm20948 = new ICM20948_HAL(&hi2c1, ICM20948::Address::LOW);
