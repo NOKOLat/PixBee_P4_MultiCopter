@@ -44,9 +44,9 @@ void ICM20948_USER::init(){
     icm20948->pwrmgmt2(0b0);
 }
 
-void ICM20948_USER::calibration(Vector3D<float> &gyro){
+uint16_t ICM20948_USER::calibration(Vector3D<float> &gyro){
 	if(__isCalibrated){
-		return;
+		return 0xffff;
 	}
 
 	if(!(averageCounter == 0 && gyro.norm() < 0.1)){
@@ -56,7 +56,7 @@ void ICM20948_USER::calibration(Vector3D<float> &gyro){
 				gyroAverage[n] = 0;
 			}
 			averageCounter = 0;
-			return;
+			return 0;
 		}
 	}
 
@@ -66,6 +66,8 @@ void ICM20948_USER::calibration(Vector3D<float> &gyro){
 	if(averageCounter > 1000){
 		__isCalibrated = true;
 	}
+
+	return averageCounter;
 }
 
 void ICM20948_USER::getIMU(Vector3D<float> &accel, Vector3D<float> &gyro){

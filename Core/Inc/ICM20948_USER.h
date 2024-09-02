@@ -23,7 +23,7 @@ public:
 	void confirmConnection();
 	void init();
 
-	void calibration(Vector3D<float> &gyro);
+	uint16_t calibration(Vector3D<float> &gyro);
 	bool isCalibrated(){
 		return __isCalibrated;
 	}
