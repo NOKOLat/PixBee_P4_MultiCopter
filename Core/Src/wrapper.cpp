@@ -76,9 +76,6 @@ void init(){
 	CLEAR_MASK_ICM20948_INTERRUPT();
 	message("ICM20948 is initialized");
 
-	esc.enable();
-	esc.arm();
-
 	while(isInitializing){
 		isInitializing = !attitudeEstimate.isInitialized();
 		bool tmp = icm20948User.isCalibrated();
@@ -88,12 +85,15 @@ void init(){
 		}
 		isInitializing = !tmp;
 //		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_1));
-		esc.setSpeed(0);
+//		esc.setSpeed(0);
 		HAL_Delay(50);
 	}
 	__HAL_TIM_SET_COMPARE(ledTim, YELLOW_LED_CHANNEL, 400);
 	HAL_Delay(100);
 
+
+	esc.enable();
+	esc.arm();
 
 	__HAL_TIM_SET_COMPARE(ledTim, YELLOW_LED_CHANNEL, 500);
 	HAL_Delay(10);
