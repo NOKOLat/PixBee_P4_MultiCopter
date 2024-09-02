@@ -54,7 +54,7 @@ OUTPUT MULTICOPTER::controller(const INPUT &input){
 			u.at(0) = altitudeController->controller(input.sbusAltitudeNorm,input.altitude);
 			break;
 		case ALTITUDE_CONTROL_MODE::THROTTLE:
-			u.at(0) = std::sqrt((input.sbusAltitudeNorm + 1.0) * 0.5);
+			u.at(0) = (input.sbusAltitudeNorm + 1.0) * 0.5;
 			break;
 	}
 
@@ -68,6 +68,16 @@ OUTPUT MULTICOPTER::controller(const INPUT &input){
 	res[1] = u[0] + u[1] - u[2] + u[3];
 	res[2] = u[0] - u[1] + u[2] + u[3];
 	res[3] = u[0] - u[1] - u[2] - u[3];
+
+	for(auto &it:res){
+		if(it<0){
+			it = 0;
+		}else if(it>1.0){
+			it = 1.0;
+		}else{
+			it = std::sqrt(it);
+		}
+	}
 
 	return res;
 
